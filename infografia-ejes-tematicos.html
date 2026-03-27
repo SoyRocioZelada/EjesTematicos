@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ejes Temáticos – Rocio Zelada</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:        #0d0d0d;
+  --cream:      #f5f0e8;
+  --gold:       #c9a84c;
+  --gold-light: #e8c96a;
+  --teal:       #1a5c5a;
+  --teal-light: #2a8a87;
+  --off-white:  #faf8f4;
+
+  /* Eje accent colors — distinct but harmonious with the palette */
+  --e1: #c9a84c;   /* gold — tecnología */
+  --e2: #2a8a87;   /* teal — liderazgo */
+  --e3: #8a6d1a;   /* amber dark — innovación */
+  --e4: #1a5c5a;   /* teal dark — gestión */
+  --e5: #b05a2f;   /* rust — PMOs */
+  --e6: #4a7c59;   /* sage — productividad */
+  --e7: #5a4a7c;   /* violet — híbrido */
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--ink);
+  color: var(--cream);
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════
+   HEADER
+══════════════════════════════ */
+.infog-header {
+  position: relative;
+  background: var(--ink);
+  overflow: hidden;
+  padding: 72px 80px 60px;
+  text-align: center;
+}
+
+.infog-header-bg {
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(201,168,76,0.06) 59px, rgba(201,168,76,0.06) 60px),
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(201,168,76,0.06) 59px, rgba(201,168,76,0.06) 60px);
+  pointer-events: none;
+}
+
+/* Large decorative circle behind title */
+.infog-header-circle {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.08);
+  pointer-events: none;
+}
+.infog-header-circle::before {
+  content: '';
+  position: absolute; inset: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.05);
+}
+
+.header-eyebrow {
+  position: relative;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.35em;
+  text-transform: uppercase; color: var(--gold);
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  margin-bottom: 24px;
+}
+.header-eyebrow::before, .header-eyebrow::after {
+  content: ''; display: block;
+  width: 48px; height: 1px; background: var(--gold); opacity: 0.6;
+}
+
+.infog-header h1 {
+  position: relative;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(42px, 5.5vw, 80px);
+  font-weight: 300; line-height: 1.05;
+  color: var(--cream); margin-bottom: 10px;
+}
+.infog-header h1 em { font-style: italic; color: var(--gold); }
+
+.infog-header-sub {
+  position: relative;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(16px, 2vw, 22px); font-weight: 300;
+  color: rgba(245,240,232,0.5); margin-bottom: 40px;
+}
+
+/* 7-dot legend strip */
+.eje-legend {
+  position: relative;
+  display: flex; justify-content: center;
+  gap: 6px; flex-wrap: wrap;
+}
+.legend-dot {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(245,240,232,0.45); padding: 5px 10px;
+  border: 1px solid rgba(255,255,255,0.07); border-radius: 2px;
+  cursor: default; transition: border-color 0.2s;
+}
+.legend-dot:hover { border-color: rgba(255,255,255,0.2); color: rgba(245,240,232,0.8); }
+.legend-dot span {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+
+/* ══════════════════════════════
+   GOLD DIVIDER
+══════════════════════════════ */
+.gold-divider {
+  background: var(--gold);
+  padding: 18px 80px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px;
+}
+.gold-divider-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px; font-style: italic; color: var(--ink); line-height: 1.4;
+}
+.gold-divider-badge {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; color: rgba(13,13,13,0.5); white-space: nowrap;
+}
+
+/* ══════════════════════════════
+   EJES GRID — main layout
+══════════════════════════════ */
+.ejes-wrapper {
+  padding: 64px 80px;
+  display: flex; flex-direction: column; gap: 3px;
+  background: var(--ink);
+}
+
+/* Each eje row */
+.eje-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 3px;
+  min-height: 0;
+}
+
+/* LEFT: eje identity panel */
+.eje-identity {
+  padding: 32px 28px;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.eje-identity::after {
+  content: attr(data-num);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 110px; font-weight: 300; line-height: 1;
+  position: absolute; bottom: -10px; right: -8px;
+  color: rgba(0,0,0,0.2);
+  pointer-events: none;
+}
+
+.eje-num-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.28em;
+  text-transform: uppercase; color: rgba(255,255,255,0.45);
+  margin-bottom: 8px;
+}
+.eje-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px; font-weight: 600; line-height: 1.3;
+  color: white; position: relative;
+}
+.eje-count {
+  margin-top: 14px; font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(255,255,255,0.35);
+}
+.eje-count strong {
+  font-size: 22px; font-family: 'Cormorant Garamond', serif;
+  font-weight: 300; display: block; color: rgba(255,255,255,0.7);
+  line-height: 1;
+}
+
+/* RIGHT: temas grid */
+.eje-temas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+}
+
+/* Single tema card */
+.tema-card {
+  background: rgba(255,255,255,0.03);
+  padding: 22px 18px;
+  position: relative; overflow: hidden;
+  transition: background 0.2s;
+  cursor: default;
+}
+.tema-card:hover { background: rgba(255,255,255,0.07); }
+
+/* Top color bar — eje specific */
+.tema-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.tema-num {
+  font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(245,240,232,0.3); margin-bottom: 8px; display: block;
+}
+.tema-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; font-weight: 600; line-height: 1.3;
+  color: var(--cream); margin-bottom: 10px;
+}
+.tema-desc {
+  font-size: 10.5px; color: rgba(245,240,232,0.45); line-height: 1.65;
+  margin-bottom: 12px;
+}
+
+/* Metodologías pill list */
+.tema-methods {
+  display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px;
+}
+.method-pill {
+  font-size: 8.5px; letter-spacing: 0.06em;
+  padding: 2px 6px; border-radius: 1px;
+  background: rgba(255,255,255,0.06);
+  color: rgba(245,240,232,0.5); white-space: nowrap;
+}
+
+/* IA badge */
+.ia-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 8px; font-weight: 500; letter-spacing: 0.15em;
+  text-transform: uppercase; padding: 3px 7px; border-radius: 1px;
+  margin-top: 4px;
+}
+.ia-badge svg { width: 10px; height: 10px; flex-shrink: 0; }
+
+/* ══════════════════════════════
+   EJE COLOR THEMES
+══════════════════════════════ */
+/* Eje 1 — Gold */
+.eje-1 .eje-identity { background: #1a1408; }
+.eje-1 .eje-num-label { color: rgba(201,168,76,0.6); }
+.eje-1 .eje-count strong { color: var(--gold); }
+.eje-1 .tema-card::before { background: var(--e1); }
+.eje-1 .ia-badge { background: rgba(201,168,76,0.12); color: var(--gold-light); }
+.eje-1 .method-pill { background: rgba(201,168,76,0.08); }
+
+/* Eje 2 — Teal light */
+.eje-2 .eje-identity { background: #081514; }
+.eje-2 .eje-num-label { color: rgba(42,138,135,0.7); }
+.eje-2 .eje-count strong { color: var(--teal-light); }
+.eje-2 .tema-card::before { background: var(--e2); }
+.eje-2 .ia-badge { background: rgba(42,138,135,0.12); color: #5fc8c5; }
+.eje-2 .method-pill { background: rgba(42,138,135,0.08); }
+
+/* Eje 3 — Amber */
+.eje-3 .eje-identity { background: #160f04; }
+.eje-3 .eje-num-label { color: rgba(138,109,26,0.7); }
+.eje-3 .eje-count strong { color: #d4a843; }
+.eje-3 .tema-card::before { background: var(--e3); }
+.eje-3 .ia-badge { background: rgba(138,109,26,0.15); color: #d4a843; }
+.eje-3 .method-pill { background: rgba(138,109,26,0.08); }
+
+/* Eje 4 — Teal dark */
+.eje-4 .eje-identity { background: #081312; }
+.eje-4 .eje-num-label { color: rgba(26,92,90,0.9); }
+.eje-4 .eje-count strong { color: #3aada9; }
+.eje-4 .tema-card::before { background: var(--e4); }
+.eje-4 .ia-badge { background: rgba(26,92,90,0.15); color: #3aada9; }
+.eje-4 .method-pill { background: rgba(26,92,90,0.1); }
+
+/* Eje 5 — Rust */
+.eje-5 .eje-identity { background: #160a04; }
+.eje-5 .eje-num-label { color: rgba(176,90,47,0.7); }
+.eje-5 .eje-count strong { color: #d4784a; }
+.eje-5 .tema-card::before { background: var(--e5); }
+.eje-5 .ia-badge { background: rgba(176,90,47,0.12); color: #d4784a; }
+.eje-5 .method-pill { background: rgba(176,90,47,0.08); }
+
+/* Eje 6 — Sage */
+.eje-6 .eje-identity { background: #081208; }
+.eje-6 .eje-num-label { color: rgba(74,124,89,0.7); }
+.eje-6 .eje-count strong { color: #6ab885; }
+.eje-6 .tema-card::before { background: var(--e6); }
+.eje-6 .ia-badge { background: rgba(74,124,89,0.12); color: #6ab885; }
+.eje-6 .method-pill { background: rgba(74,124,89,0.08); }
+
+/* Eje 7 — Violet */
+.eje-7 .eje-identity { background: #0c0a14; }
+.eje-7 .eje-num-label { color: rgba(90,74,124,0.8); }
+.eje-7 .eje-count strong { color: #9b85d4; }
+.eje-7 .tema-card::before { background: var(--e7); }
+.eje-7 .ia-badge { background: rgba(90,74,124,0.15); color: #9b85d4; }
+.eje-7 .method-pill { background: rgba(90,74,124,0.08); }
+
+/* Eje 7 only has 3 temas — fill 4th slot */
+.eje-7 .eje-temas { grid-template-columns: repeat(3, 1fr); }
+
+/* ══════════════════════════════
+   FOOTER STRIP
+══════════════════════════════ */
+.infog-footer {
+  background: #050505;
+  padding: 20px 80px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(201,168,76,0.1);
+}
+.infog-footer-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; color: var(--gold);
+}
+.infog-footer-note {
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(245,240,232,0.2);
+}
+
+/* ══════════════════════════════
+   ANIMATIONS
+══════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.infog-header > * { animation: fadeUp 0.7s ease both; }
+.infog-header > *:nth-child(2) { animation-delay: 0.1s; }
+.infog-header > *:nth-child(3) { animation-delay: 0.2s; }
+.infog-header > *:nth-child(4) { animation-delay: 0.3s; }
+.infog-header > *:nth-child(5) { animation-delay: 0.4s; }
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media (max-width: 1100px) {
+  .infog-header, .ejes-wrapper { padding: 48px 40px; }
+  .gold-divider { padding: 16px 40px; }
+  .eje-row { grid-template-columns: 180px 1fr; }
+  .eje-temas { grid-template-columns: repeat(2, 1fr); }
+  .eje-7 .eje-temas { grid-template-columns: repeat(2, 1fr); }
+  .infog-footer { padding: 20px 40px; }
+}
+
+@media (max-width: 700px) {
+  .infog-header { padding: 40px 24px 32px; }
+  .ejes-wrapper { padding: 24px; gap: 12px; }
+  .gold-divider { padding: 16px 24px; flex-direction: column; gap: 8px; }
+  .eje-row { grid-template-columns: 1fr; }
+  .eje-temas, .eje-7 .eje-temas { grid-template-columns: 1fr 1fr; }
+  .eje-identity { padding: 20px; }
+  .eje-identity::after { font-size: 60px; }
+  .infog-footer { flex-direction: column; gap: 8px; text-align: center; padding: 16px 24px; }
+}
+
+@media (max-width: 480px) {
+  .eje-temas, .eje-7 .eje-temas { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="infog-header">
+  <div class="infog-header-bg"></div>
+  <div class="infog-header-circle"></div>
+
+  <div class="header-eyebrow">Rocio Zelada · Portafolio de Especialidades</div>
+
+  <h1>Ejes <em>Temáticos</em></h1>
+  <p class="infog-header-sub">7 Ejes · 27 Temas · Metodologías, Herramientas e Inteligencia Artificial</p>
+
+  <div class="eje-legend">
+    <div class="legend-dot"><span style="background:var(--e1)"></span>Agilidad y Tecnología</div>
+    <div class="legend-dot"><span style="background:var(--e2)"></span>Liderazgo y Soft Skills</div>
+    <div class="legend-dot"><span style="background:var(--e3)"></span>Innovación y Proyectos</div>
+    <div class="legend-dot"><span style="background:var(--e4)"></span>Gestión Organizacional</div>
+    <div class="legend-dot"><span style="background:var(--e5)"></span>PMOs y Portafolio</div>
+    <div class="legend-dot"><span style="background:var(--e6)"></span>Productividad Personal</div>
+    <div class="legend-dot"><span style="background:var(--e7)"></span>Gestión Híbrida</div>
+  </div>
+</header>
+
+<!-- ══ GOLD BAND ══ -->
+<div class="gold-divider">
+  <p class="gold-divider-text">"Gestión y tecnología sin complicaciones — para que tu equipo avance sin fricción."</p>
+  <span class="gold-divider-badge">rociozelada.com</span>
+</div>
+
+<!-- ══ EJES ══ -->
+<div class="ejes-wrapper">
+
+  <!-- EJE 1 -->
+  <div class="eje-row eje-1">
+    <div class="eje-identity" data-num="1">
+      <span class="eje-num-label">Eje 01</span>
+      <h2 class="eje-title">Agilidad Organizacional, Arquitectura Empresarial y Evolución Tecnológica</h2>
+      <div class="eje-count"><strong>4</strong>Temas</div>
+    </div>
+    <div class="eje-temas">
+      <div class="tema-card">
+        <span class="tema-num">Tema 1</span>
+        <h3 class="tema-title">Agilidad Organizacional</h3>
+        <p class="tema-desc">Adaptar equipos y procesos a entornos de cambio constante, mejorando la respuesta y entrega de valor.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Scrum</span>
+          <span class="method-pill">Kanban</span>
+          <span class="method-pill">SAFe</span>
+          <span class="method-pill">Agile Coaching</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Dashboards · Bots · Análisis Predictivo
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 2</span>
+        <h3 class="tema-title">Arquitectura Empresarial</h3>
+        <p class="tema-desc">Diseño y alineación estratégica de procesos y tecnología mediante marcos de arquitectura para la transformación digital.</p>
+        <div class="tema-methods">
+          <span class="method-pill">TOGAF</span>
+          <span class="method-pill">ArchiMate</span>
+          <span class="method-pill">BPM</span>
+          <span class="method-pill">Business Capability Mapping</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Process Mining · Simulación · Documentación
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 3</span>
+        <h3 class="tema-title">Evolución Tecnológica y Estrategia Digital</h3>
+        <p class="tema-desc">Planificación estratégica y adopción de nuevas tecnologías con roadmaps digitales adaptados a los objetivos de negocio.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Tech Roadmapping</span>
+          <span class="method-pill">Foresight</span>
+          <span class="method-pill">Gap Analysis</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Tendencias · Modelado Predictivo · Copilot
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 4</span>
+        <h3 class="tema-title">Tecnologías Emergentes y Automatización Inteligente</h3>
+        <p class="tema-desc">Integración de IA, ML, IoT, Blockchain y automatización para transformar modelos operativos y de negocio.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Innovation Canvas</span>
+          <span class="method-pill">PoC</span>
+          <span class="method-pill">Agile Implementation</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: ML · Chatbots · RPA
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJE 2 -->
+  <div class="eje-row eje-2">
+    <div class="eje-identity" data-num="2">
+      <span class="eje-num-label">Eje 02</span>
+      <h2 class="eje-title">Liderazgo y Soft Skills</h2>
+      <div class="eje-count"><strong>4</strong>Temas</div>
+    </div>
+    <div class="eje-temas">
+      <div class="tema-card">
+        <span class="tema-num">Tema 1</span>
+        <h3 class="tema-title">Liderazgo e Inclusión</h3>
+        <p class="tema-desc">Desarrollo de habilidades de liderazgo con foco en equidad, influencia positiva y construcción de culturas organizacionales diversas e inclusivas.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Mentoring</span>
+          <span class="method-pill">Sponsorship</span>
+          <span class="method-pill">Role Modeling</span>
+          <span class="method-pill">Networking</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Matching Mentoría · Dashboards DEI
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 2</span>
+        <h3 class="tema-title">Liderazgo Colaborativo y Transformacional</h3>
+        <p class="tema-desc">Estilos de liderazgo que empoderan e inspiran equipos en entornos de cambio, integrando colaboración, empatía y sentido de propósito.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Leadership Circle</span>
+          <span class="method-pill">Coaching Ejecutivo</span>
+          <span class="method-pill">Feedback 360°</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Clima · Engagement · Coaching Bots
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 3</span>
+        <h3 class="tema-title">Comunicación Efectiva y Negociación</h3>
+        <p class="tema-desc">Desarrollo de habilidades de comunicación verbal, no verbal y digital para influir, persuadir, negociar y gestionar conflictos en entornos ejecutivos.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Comunicación Asertiva</span>
+          <span class="method-pill">NVC</span>
+          <span class="method-pill">Storytelling</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Grammarly · Otter.ai · Simuladores
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 4</span>
+        <h3 class="tema-title">Inteligencia Emocional y Gestión de Relaciones</h3>
+        <p class="tema-desc">Fortalecimiento de la autoconciencia, autogestión y empatía para construir relaciones de alto impacto y entornos de trabajo saludables.</p>
+        <div class="tema-methods">
+          <span class="method-pill">EQ-i 2.0</span>
+          <span class="method-pill">Mindfulness</span>
+          <span class="method-pill">Peer Coaching</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Emotion AI · Feedback Automatizado
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJE 3 -->
+  <div class="eje-row eje-3">
+    <div class="eje-identity" data-num="3">
+      <span class="eje-num-label">Eje 03</span>
+      <h2 class="eje-title">Innovación, Creatividad y Gestión de Proyectos</h2>
+      <div class="eje-count"><strong>4</strong>Temas</div>
+    </div>
+    <div class="eje-temas">
+      <div class="tema-card">
+        <span class="tema-num">Tema 1</span>
+        <h3 class="tema-title">Gestión de la Innovación Organizacional</h3>
+        <p class="tema-desc">Cultura que favorece la generación y gestión de ideas disruptivas integradas a la estrategia de la organización.</p>
+        <div class="tema-methods">
+          <span class="method-pill">ISO 56002</span>
+          <span class="method-pill">Open Innovation</span>
+          <span class="method-pill">Blue Ocean</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Scouting · KPIs Innovación · Evaluación Ideas
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 2</span>
+        <h3 class="tema-title">Creatividad Aplicada y Design Thinking</h3>
+        <p class="tema-desc">Metodologías para identificar retos, generar soluciones creativas, prototipar e iterar desde las necesidades reales del usuario.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Design Thinking</span>
+          <span class="method-pill">SCAMPER</span>
+          <span class="method-pill">LEGO Serious Play</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: ChatGPT · DALL-E · Midjourney · Maze
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 3</span>
+        <h3 class="tema-title">Gestión Ágil y Transformación de Proyectos</h3>
+        <p class="tema-desc">Proyectos de innovación y transformación digital gestionados ágilmente para maximizar valor y minimizar riesgos.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Scrum/Kanban/SAFe</span>
+          <span class="method-pill">Lean Startup</span>
+          <span class="method-pill">OKRs</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Priorización · Reporting · Backlog Bots
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 4</span>
+        <h3 class="tema-title">Emprendimiento Corporativo, Aceleración e Incubación</h3>
+        <p class="tema-desc">Acompañamiento de nuevos emprendimientos desde la ideación hasta la aceleración, promoviendo la mentalidad intraemprendedora.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Lean Startup</span>
+          <span class="method-pill">Customer Dev</span>
+          <span class="method-pill">Hackathons</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Pitch Generator · Validación · Prototipado
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJE 4 -->
+  <div class="eje-row eje-4">
+    <div class="eje-identity" data-num="4">
+      <span class="eje-num-label">Eje 04</span>
+      <h2 class="eje-title">Gestión Organizacional, Cambio y Conocimiento</h2>
+      <div class="eje-count"><strong>4</strong>Temas</div>
+    </div>
+    <div class="eje-temas">
+      <div class="tema-card">
+        <span class="tema-num">Tema 1</span>
+        <h3 class="tema-title">Gestión del Cambio Organizacional</h3>
+        <p class="tema-desc">Preparar, acompañar y consolidar procesos de transformación interna, abordando la resistencia y asegurando el alineamiento.</p>
+        <div class="tema-methods">
+          <span class="method-pill">ADKAR</span>
+          <span class="method-pill">Kotter's 8 Steps</span>
+          <span class="method-pill">Change Canvas</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Clima · Resistencia Predictiva · Asistentes
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 2</span>
+        <h3 class="tema-title">Gestión del Conocimiento Organizacional</h3>
+        <p class="tema-desc">Sistemas y prácticas para capturar, compartir y reutilizar el conocimiento clave, favoreciendo el aprendizaje continuo.</p>
+        <div class="tema-methods">
+          <span class="method-pill">KMS</span>
+          <span class="method-pill">Communities of Practice</span>
+          <span class="method-pill">Lessons Learned</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Copilot · Chatbots · Brechas de Conocimiento
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 3</span>
+        <h3 class="tema-title">Gestión de Equipos y Desempeño</h3>
+        <p class="tema-desc">Liderar equipos de alto rendimiento, rastrear progreso y potenciar capacitación alineando metas individuales y colectivas.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Talent Management</span>
+          <span class="method-pill">9-Box Grid</span>
+          <span class="method-pill">OKRs · KPIs</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Lattice · Clima Real-Time · Rotación
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 4</span>
+        <h3 class="tema-title">Gestión del Riesgo y Continuidad</h3>
+        <p class="tema-desc">Análisis y mitigación de riesgos operativos, tecnológicos y humanos para asegurar la resiliencia del negocio.</p>
+        <div class="tema-methods">
+          <span class="method-pill">ERM</span>
+          <span class="method-pill">BCP</span>
+          <span class="method-pill">ISO 31000</span>
+          <span class="method-pill">FODA</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Riesgos Emergentes · Dashboards Predictivos
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJE 5 -->
+  <div class="eje-row eje-5">
+    <div class="eje-identity" data-num="5">
+      <span class="eje-num-label">Eje 05</span>
+      <h2 class="eje-title">PMOs y Gestión de Portafolio</h2>
+      <div class="eje-count"><strong>3</strong>Temas</div>
+    </div>
+    <div class="eje-temas" style="grid-template-columns: repeat(3,1fr);">
+      <div class="tema-card">
+        <span class="tema-num">Tema 1</span>
+        <h3 class="tema-title">Diseño y Gestión de Oficinas de Proyectos (PMO)</h3>
+        <p class="tema-desc">Constitución, diseño e implementación de la PMO alineada a la estrategia organizacional, con gobierno, estándares y valor.</p>
+        <div class="tema-methods">
+          <span class="method-pill">PMO Value Ring</span>
+          <span class="method-pill">PMI Standards</span>
+          <span class="method-pill">Balanced Scorecard</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Salud Cartera · Power BI · Chatbots PMO
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 2</span>
+        <h3 class="tema-title">Gestión de Portafolio de Proyectos</h3>
+        <p class="tema-desc">Priorización, selección, monitoreo y optimización de portafolios asegurando alineamiento estratégico y balance de riesgos.</p>
+        <div class="tema-methods">
+          <span class="method-pill">PfMP</span>
+          <span class="method-pill">Stage-Gate</span>
+          <span class="method-pill">Value Mapping</span>
+          <span class="method-pill">Scoring Models</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Priorización Dinámica · Predicción Desvíos
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 3</span>
+        <h3 class="tema-title">PMO Ágil y Transformación Digital</h3>
+        <p class="tema-desc">Evolución de la PMO tradicional hacia modelos ágiles y adaptativos, con automatización y tecnologías emergentes.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Agile PMO</span>
+          <span class="method-pill">Hybrid PM</span>
+          <span class="method-pill">Lean Portfolio</span>
+          <span class="method-pill">Kanban</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Tracking Ágil · Bots · Analítica Predictiva
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJE 6 -->
+  <div class="eje-row eje-6">
+    <div class="eje-identity" data-num="6">
+      <span class="eje-num-label">Eje 06</span>
+      <h2 class="eje-title">Productividad Personal para Ejecutivos</h2>
+      <div class="eje-count"><strong>4</strong>Temas</div>
+    </div>
+    <div class="eje-temas">
+      <div class="tema-card">
+        <span class="tema-num">Tema 1</span>
+        <h3 class="tema-title">Gestión del Tiempo y Prioridades</h3>
+        <p class="tema-desc">Técnicas para organizar tareas y recursos personales logrando mayor enfoque y efectividad en contextos de alta demanda.</p>
+        <div class="tema-methods">
+          <span class="method-pill">GTD</span>
+          <span class="method-pill">Eisenhower Matrix</span>
+          <span class="method-pill">Pomodoro</span>
+          <span class="method-pill">Time Blocking</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Copilot · Análisis de Hábitos · Zapier
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 2</span>
+        <h3 class="tema-title">Productividad Digital y Automatización Personal</h3>
+        <p class="tema-desc">Optimización del trabajo digital mediante flujos automáticos, reduciendo esfuerzo manual y saturación operativa.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Digital Workflows</span>
+          <span class="method-pill">Personal Kanban</span>
+          <span class="method-pill">Minimalismo Digital</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Gmail Smart · Chatbots · Resúmenes Auto
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 3</span>
+        <h3 class="tema-title">Gestión del Estrés y Bienestar Integral</h3>
+        <p class="tema-desc">Prevenir el burnout, manejar el estrés y promover el bienestar físico, mental y emocional para un alto desempeño sostenible.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Mindfulness</span>
+          <span class="method-pill">Wellness Plans</span>
+          <span class="method-pill">Resiliencia</span>
+          <span class="method-pill">Biohacking</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Monitoreo de Estrés · Coaching Bienestar
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 4</span>
+        <h3 class="tema-title">Aprendizaje Continuo y Desarrollo Personal</h3>
+        <p class="tema-desc">Rutinas y ecosistemas para el aprendizaje permanente y adquisición de nuevas habilidades adaptadas al entorno profesional.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Learning Agility</span>
+          <span class="method-pill">Microlearning</span>
+          <span class="method-pill">IDP</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Rutas Aprendizaje · Tests Adaptativos
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJE 7 -->
+  <div class="eje-row eje-7">
+    <div class="eje-identity" data-num="7">
+      <span class="eje-num-label">Eje 07</span>
+      <h2 class="eje-title">Gestión Híbrida de Proyectos</h2>
+      <div class="eje-count"><strong>4</strong>Temas</div>
+    </div>
+    <div class="eje-temas">
+      <div class="tema-card">
+        <span class="tema-num">Tema 1</span>
+        <h3 class="tema-title">Fundamentos de Gestión Híbrida</h3>
+        <p class="tema-desc">Adopción de enfoques híbridos que integran marcos predictivos y ágiles para adaptarse a realidades dinámicas de proyectos.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Hybrid PM Framework</span>
+          <span class="method-pill">Tailoring</span>
+          <span class="method-pill">Agile-Waterfall</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Recomendación Metodología · Visualización
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 2</span>
+        <h3 class="tema-title">Planificación y Seguimiento en Ambientes Híbridos</h3>
+        <p class="tema-desc">Planes que combinan cronogramas predictivos y sprints iterativos con monitoreo flexible y coordinación multidisciplinaria.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Gantt + Kanban</span>
+          <span class="method-pill">Sprint Planning</span>
+          <span class="method-pill">Risk Híbrido</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Predicción Retrasos · Recursos · Alertas
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 3</span>
+        <h3 class="tema-title">Gestión de Cambios y Stakeholders Híbridos</h3>
+        <p class="tema-desc">Gestionar cambios en alcance y prioridades con alineamiento de expectativas y comunicación efectiva multicanal.</p>
+        <div class="tema-methods">
+          <span class="method-pill">Hybrid Change Mgmt</span>
+          <span class="method-pill">Stakeholder Matrix</span>
+          <span class="method-pill">Comunicación Multicanal</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Impacto Cambios · Chatbots Stakeholders
+        </span>
+      </div>
+      <div class="tema-card">
+        <span class="tema-num">Tema 4</span>
+        <h3 class="tema-title">Medición del Desempeño y Valor en Proyectos Híbridos</h3>
+        <p class="tema-desc">Evaluación y mejora continua del desempeño para generar valor de negocio y ajuste iterativo de prácticas.</p>
+        <div class="tema-methods">
+          <span class="method-pill">KPIs Híbridos</span>
+          <span class="method-pill">Value Delivery</span>
+          <span class="method-pill">Retrospectivas</span>
+        </div>
+        <span class="ia-badge">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+          IA: Benchmarking · Lecciones Aprendidas Auto
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer class="infog-footer">
+  <span class="infog-footer-brand">Rocio Zelada</span>
+  <span class="infog-footer-note">7 Ejes · 27 Temas · rociozelada.com · <a href="/cdn-cgi/l/email-protection" class="__cf_emai
